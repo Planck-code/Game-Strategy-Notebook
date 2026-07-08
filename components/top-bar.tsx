@@ -3,20 +3,62 @@
 import { Search, Command, Bell, Menu } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useDashboardMobile } from '@/components/dashboard-layout'
 
-export function TopBar({ onMenu }: { onMenu?: () => void }) {
+export type TopBarProps = {
+  /** 外部传入的菜单回调（独立使用时）；在 DashboardLayout 内优先走 Context */
+  onMenu?: () => void
+  /** 页面标题（可选，显示在搜索框左侧） */
+  title?: string
+  /** 标题右侧的额外操作（如面包屑） */
+  children?: React.ReactNode
+}
+
+/**
+ * TopBar — 全局顶部栏
+ *
+ * - 移动端显示汉堡菜单按钮，通过 DashboardLayout Context 或 onMenu prop 打开侧边栏
+ * - 居中搜索框 + CmdK 快捷键提示
+ * - 右侧通知铃铛
+ *
+ * @example
+ * // 在 DashboardLayout 内自动连接
+ * <TopBar title="攻略编辑" />
+ *
+ * // 独立使用时手动传 onMenu
+ * <TopBar onMenu={() => setOpen(true)} />
+ */
+export function TopBar({ onMenu, title, children }: TopBarProps) {
+  // DashboardLayout Context — 如果在 Layout 内，自动获取 openMobile
+  const { openMobile, hasLayout } = useDashboardMobile()
+  const handleMenu = onMenu ?? (hasLayout ? openMobile : undefined)
+
   return (
     <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl md:px-6">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="shrink-0 lg:hidden"
-        onClick={onMenu}
-        aria-label="打开菜单"
-      >
-        <Menu className="size-5" />
-      </Button>
+      {/* 移动端菜单按钮 */}
+      {handleMenu ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0 lg:hidden"
+          onClick={handleMenu}
+          aria-label="打开菜单"
+        >
+          <Menu className="size-5" />
+        </Button>
+      ) : null}
 
+      {/* 页面标题（可选） */}
+      {title ? (
+        <h1 className="shrink-0 text-sm font-semibold hidden sm:block">{title}</h1>
+      ) : null}
+
+      {/* 标题右侧自定义区域（面包屑等） */}
+      {children ? (
+        <div className="shrink-0 hidden md:flex items-center gap-2">{children}</div>
+      ) : null}
+
+      {/* 搜索框 */}
       <div className="relative flex-1 max-w-xl">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -29,6 +71,7 @@ export function TopBar({ onMenu }: { onMenu?: () => void }) {
         </kbd>
       </div>
 
+      {/* 通知 */}
       <Button
         variant="ghost"
         size="icon"

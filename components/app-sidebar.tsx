@@ -6,15 +6,33 @@ import { cn } from '@/lib/utils'
 import { navItems } from '@/lib/mock-data'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useDashboardMobile } from '@/components/dashboard-layout'
 
-export function AppSidebar({
-  className,
-  onNavigate,
-}: {
+export type AppSidebarProps = {
   className?: string
+  /** 外部导航回调（兼容独立使用场景） */
   onNavigate?: () => void
-}) {
+}
+
+/**
+ * AppSidebar — 全局侧边导航栏
+ *
+ * - 桌面端固定左栏（w-64）
+ * - 移动端通过 DashboardLayout 的 Context 自动关闭
+ * - 若独立使用，提供 onNavigate 回调
+ */
+export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
   const [active, setActive] = useState('home')
+
+  // DashboardLayout Context — 导航时自动关闭移动端抽屉
+  // 若不在 Layout 内，closeMobile 为默认 no-op（不会 throw）
+  const { closeMobile } = useDashboardMobile()
+
+  const handleNav = (key: string) => {
+    setActive(key)
+    closeMobile()
+    onNavigate?.()
+  }
 
   return (
     <aside
@@ -29,8 +47,12 @@ export function AppSidebar({
           <Gamepad2 className="size-5 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold leading-tight">Strategy Notebook</p>
-          <p className="truncate font-mono text-[11px] text-muted-foreground">v1.0 · 创作者版</p>
+          <p className="truncate text-sm font-semibold leading-tight">
+            Strategy Notebook
+          </p>
+          <p className="truncate font-mono text-[11px] text-muted-foreground">
+            v1.0 · 创作者版
+          </p>
         </div>
         <Button
           variant="ghost"
@@ -59,10 +81,7 @@ export function AppSidebar({
           return (
             <button
               key={item.key}
-              onClick={() => {
-                setActive(item.key)
-                onNavigate?.()
-              }}
+              onClick={() => handleNav(item.key)}
               className={cn(
                 'group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-200',
                 isActive
@@ -73,7 +92,9 @@ export function AppSidebar({
               <Icon
                 className={cn(
                   'size-[18px] shrink-0 transition-colors',
-                  isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground',
+                  isActive
+                    ? 'text-primary'
+                    : 'text-muted-foreground group-hover:text-foreground',
                 )}
               />
               <span className="flex-1 text-left">{item.label}</span>
@@ -82,7 +103,9 @@ export function AppSidebar({
                   {item.badge}
                 </span>
               ) : null}
-              {isActive ? <span className="size-1.5 rounded-full bg-primary" /> : null}
+              {isActive ? (
+                <span className="size-1.5 rounded-full bg-primary" />
+              ) : null}
             </button>
           )
         })}
@@ -92,11 +115,15 @@ export function AppSidebar({
       <div className="flex items-center gap-2.5 rounded-lg border border-sidebar-border bg-sidebar-accent/40 p-2">
         <Avatar className="size-8">
           <AvatarImage src="/user-avatar-gamer.png" alt="用户头像" />
-          <AvatarFallback className="bg-primary/20 text-xs text-primary">GM</AvatarFallback>
+          <AvatarFallback className="bg-primary/20 text-xs text-primary">
+            GM
+          </AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium">攻略猎人</p>
-          <p className="truncate font-mono text-[10px] text-muted-foreground">Pro 创作者</p>
+          <p className="truncate font-mono text-[10px] text-muted-foreground">
+            Pro 创作者
+          </p>
         </div>
         <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px] shadow-emerald-400/50" />
       </div>
