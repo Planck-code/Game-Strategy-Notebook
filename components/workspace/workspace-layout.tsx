@@ -35,7 +35,7 @@ export function WorkspaceLayout({
     useWorkspace()
 
   return (
-    <div className="flex h-full flex-1 min-h-0">
+    <div className="relative flex h-full flex-1 min-h-0">
       {/* ======== Zone 2: Guide Navigator ======== */}
       <div
         className={cn(
@@ -53,11 +53,11 @@ export function WorkspaceLayout({
               <Button
                 variant="ghost"
                 size="icon"
-                className="size-6"
+                className="size-7"
                 onClick={toggleNavigator}
                 aria-label="收起导航器"
               >
-                <PanelLeftClose className="size-3.5" />
+                <PanelLeftClose className="size-4" />
               </Button>
             </div>
             {/* Navigator 内容 */}
@@ -66,16 +66,16 @@ export function WorkspaceLayout({
         ) : null}
       </div>
 
-      {/* Navigator 折叠后的展开按钮 */}
+      {/* Navigator 折叠后的展开按钮 — 放在面板外部避免 overflow-hidden 裁剪 */}
       {!isNavigatorOpen ? (
         <Button
           variant="ghost"
           size="icon"
-          className="absolute left-0 top-1/2 z-10 size-7 -translate-y-1/2 rounded-l-none border border-border/60 border-l-0 bg-card/80"
+          className="absolute left-0 top-4 z-10 size-7 rounded-l-none border border-border/60 border-l-0 bg-card/80 hover:bg-card"
           onClick={toggleNavigator}
           aria-label="展开导航器"
         >
-          <PanelLeftOpen className="size-3.5" />
+          <PanelLeftOpen className="size-4" />
         </Button>
       ) : null}
 
@@ -96,11 +96,11 @@ export function WorkspaceLayout({
               <Button
                 variant="ghost"
                 size="icon"
-                className="size-6"
+                className="size-7"
                 onClick={toggleContextPanel}
                 aria-label="收起上下文面板"
               >
-                <PanelRightClose className="size-3.5" />
+                <PanelRightClose className="size-4" />
               </Button>
               <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                 上下文
@@ -112,16 +112,16 @@ export function WorkspaceLayout({
         ) : null}
       </div>
 
-      {/* Context Panel 折叠后的展开按钮 */}
+      {/* Context Panel 折叠后的展开按钮 — 放在面板外部避免 overflow-hidden 裁剪 */}
       {!isContextPanelOpen ? (
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-0 top-1/2 z-10 size-7 -translate-y-1/2 rounded-r-none border border-border/60 border-r-0 bg-card/80"
+          className="absolute right-0 top-4 z-10 size-7 rounded-r-none border border-border/60 border-r-0 bg-card/80 hover:bg-card"
           onClick={toggleContextPanel}
           aria-label="展开上下文面板"
         >
-          <PanelRightOpen className="size-3.5" />
+          <PanelRightOpen className="size-4" />
         </Button>
       ) : null}
     </div>
