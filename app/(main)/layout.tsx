@@ -15,12 +15,14 @@ import { TodayPanel } from '@/components/today-panel'
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isDashboard = pathname === '/'
+  const isWorkspace = pathname.startsWith('/guides')
 
   return (
     <DashboardLayout
       sidebar={<AppSidebar />}
       topbar={<TopBar />}
       panel={isDashboard ? <TodayPanel /> : undefined}
+      variant={isWorkspace ? 'workspace' : 'page'}
     >
       {children}
     </DashboardLayout>

@@ -52,6 +52,12 @@ export type DashboardLayoutProps = {
     | 'max-w-6xl'
     | 'max-w-7xl'
     | 'max-w-none'
+  /**
+   * 布局变体
+   * - 'page'（默认）：居中内容区，带滚动和 padding
+   * - 'workspace'：全宽全高，无 padding，由子组件管理滚动
+   */
+  variant?: 'page' | 'workspace'
 }
 
 /**
@@ -84,6 +90,7 @@ export function DashboardLayout({
   topbar,
   className,
   maxWidth = 'max-w-4xl',
+  variant = 'page',
 }: DashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -93,6 +100,8 @@ export function DashboardLayout({
     closeMobile: () => setMobileOpen(false),
     hasLayout: true,
   }
+
+  const isWorkspace = variant === 'workspace'
 
   return (
     <DashboardContext.Provider value={ctx}>
@@ -131,18 +140,23 @@ export function DashboardLayout({
         <main className="flex min-w-0 flex-1 flex-col">
           {topbar}
 
-          {/* 内容滚动区 */}
-          <div className="flex-1 overflow-y-auto">
-            <div
-              className={cn(
-                'mx-auto flex flex-col gap-6 px-4 py-6 md:px-6',
-                maxWidth,
-                className,
-              )}
-            >
-              {children}
+          {isWorkspace ? (
+            /* Workspace 模式：全高全宽，无滚动容器，子组件自行管理布局 */
+            <div className="flex-1 min-h-0">{children}</div>
+          ) : (
+            /* Page 模式（默认）：居中内容区，带滚动和 padding */
+            <div className="flex-1 overflow-y-auto">
+              <div
+                className={cn(
+                  'mx-auto flex flex-col gap-6 px-4 py-6 md:px-6',
+                  maxWidth,
+                  className,
+                )}
+              >
+                {children}
+              </div>
             </div>
-          </div>
+          )}
         </main>
 
         {/* ---- 右侧面板 — 大屏固定 ---- */}
