@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Gamepad2, ChevronsLeft, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navItems } from '@/lib/mock-data'
@@ -17,21 +18,26 @@ export type AppSidebarProps = {
 /**
  * AppSidebar — 全局侧边导航栏
  *
+ * - 使用 Next.js App Router 路由（Link + usePathname）
  * - 桌面端固定左栏（w-64）
  * - 移动端通过 DashboardLayout 的 Context 自动关闭
  * - 若独立使用，提供 onNavigate 回调
  */
 export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
-  const [active, setActive] = useState('home')
+  const pathname = usePathname()
 
   // DashboardLayout Context — 导航时自动关闭移动端抽屉
-  // 若不在 Layout 内，closeMobile 为默认 no-op（不会 throw）
   const { closeMobile } = useDashboardMobile()
 
-  const handleNav = (key: string) => {
-    setActive(key)
+  const handleNav = () => {
     closeMobile()
     onNavigate?.()
+  }
+
+  /** 根据当前 pathname 匹配活跃的导航项 key */
+  const getIsActive = (href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
   }
 
   return (
@@ -43,17 +49,19 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
     >
       {/* 品牌 */}
       <div className="flex items-center gap-2.5 px-2 py-1">
-        <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
-          <Gamepad2 className="size-5 text-primary" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold leading-tight">
-            Strategy Notebook
-          </p>
-          <p className="truncate font-mono text-[11px] text-muted-foreground">
-            v1.0 · 创作者版
-          </p>
-        </div>
+        <Link href="/" onClick={handleNav} className="flex items-center gap-2.5 min-w-0 flex-1">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
+            <Gamepad2 className="size-5 text-primary" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold leading-tight">
+              Strategy Notebook
+            </p>
+            <p className="truncate font-mono text-[11px] text-muted-foreground">
+              v1.0 · 创作者版
+            </p>
+          </div>
+        </Link>
         <Button
           variant="ghost"
           size="icon"
@@ -77,11 +85,12 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
         </p>
         {navItems.map((item) => {
           const Icon = item.icon
-          const isActive = active === item.key
+          const isActive = getIsActive(item.href)
           return (
-            <button
+            <Link
               key={item.key}
-              onClick={() => handleNav(item.key)}
+              href={item.href}
+              onClick={handleNav}
               className={cn(
                 'group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-200',
                 isActive
@@ -106,7 +115,7 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
               {isActive ? (
                 <span className="size-1.5 rounded-full bg-primary" />
               ) : null}
-            </button>
+            </Link>
           )
         })}
       </nav>

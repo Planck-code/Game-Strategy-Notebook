@@ -15,19 +15,20 @@ export type NavItem = {
   key: string
   label: string
   icon: LucideIcon
+  href: string
   badge?: number
 }
 
 export const navItems: NavItem[] = [
-  { key: 'home', label: '首页', icon: Home },
-  { key: 'library', label: '游戏库', icon: Library, badge: 12 },
-  { key: 'editor', label: '攻略编辑', icon: FileEdit },
-  { key: 'characters', label: '人物资料', icon: Users },
-  { key: 'map', label: '地图', icon: Map },
-  { key: 'quests', label: '任务', icon: ScrollText, badge: 5 },
-  { key: 'items', label: '道具', icon: Package },
-  { key: 'timeline', label: '时间线', icon: Clock },
-  { key: 'settings', label: '设置', icon: Settings },
+  { key: 'home', label: '首页', icon: Home, href: '/' },
+  { key: 'library', label: '游戏库', icon: Library, href: '/games', badge: 12 },
+  { key: 'editor', label: '攻略编辑', icon: FileEdit, href: '/guides' },
+  { key: 'characters', label: '人物资料', icon: Users, href: '/characters' },
+  { key: 'map', label: '地图', icon: Map, href: '/maps' },
+  { key: 'quests', label: '任务', icon: ScrollText, href: '/quests', badge: 5 },
+  { key: 'items', label: '道具', icon: Package, href: '/items' },
+  { key: 'timeline', label: '时间线', icon: Clock, href: '/timeline' },
+  { key: 'settings', label: '设置', icon: Settings, href: '/settings' },
 ]
 
 export type Strategy = {
