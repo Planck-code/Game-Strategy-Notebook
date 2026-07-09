@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ChevronRight, Hash, FileText, List, Table2, ImageIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { type SectionTreeNode } from '@/mock/guides'
+import { type SectionTreeNode } from '@/mock'
 
 const typeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   heading: Hash,

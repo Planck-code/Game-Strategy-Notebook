@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { Gamepad2 } from 'lucide-react'
 import { useWorkspace } from './workspace-provider'
-import { getGuidesByGame } from '@/mock/guides'
+import { getGuidesByGame, getGameById } from '@/mock'
 import { GuideListItem } from './guide-list-item'
 
 export function GuideList() {
@@ -26,7 +26,7 @@ export function GuideList() {
   return (
     <div className="space-y-1 px-1.5">
       {Array.from(grouped.entries()).map(([gameId, gameGuides]) => {
-        const gameName = gameGuides[0]?.gameName ?? gameId
+        const gameName = getGameById(gameId)?.name ?? gameId
         return (
           <div key={gameId} className="pb-1">
             {/* 游戏分组标题 */}

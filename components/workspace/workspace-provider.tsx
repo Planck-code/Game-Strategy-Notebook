@@ -8,7 +8,12 @@ import {
   useMemo,
   type ReactNode,
 } from 'react'
-import { guides as mockGuides, type Guide, type Section } from '@/mock/guides'
+import {
+  guides as mockGuides,
+  sections as mockSections,
+  type Guide,
+  type Section,
+} from '@/mock'
 
 // ============================================================
 // Types
@@ -19,6 +24,7 @@ export type SaveStatus = 'saved' | 'saving' | 'unsaved'
 type WorkspaceContextValue = {
   // ---- 数据 ----
   guides: Guide[]
+  sections: Section[]
   activeGuide: Guide | null
   activeSection: Section | null
 
@@ -58,6 +64,7 @@ export function useWorkspace() {
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [guides, setGuides] = useState<Guide[]>(mockGuides)
+  const [sections, setSections] = useState<Section[]>(mockSections)
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null)
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null)
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(true)
@@ -71,8 +78,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   )
 
   const activeSection = useMemo(
-    () => activeGuide?.sections.find((s) => s.id === activeSectionId) ?? null,
-    [activeGuide, activeSectionId],
+    () => sections.find((s) => s.id === activeSectionId) ?? null,
+    [sections, activeSectionId],
   )
 
   // ---- 操作 ----
@@ -81,11 +88,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     (guideId: string) => {
       setActiveGuideId(guideId)
       // 自动选中第一个顶层章节
-      const guide = guides.find((g) => g.id === guideId)
-      const firstRoot = guide?.sections.find((s) => s.parentId === null)
+      const guideSections = sections.filter(
+        (s) => s.guideId === guideId && s.parentId === null,
+      )
+      const firstRoot = guideSections.sort((a, b) => a.order - b.order)[0]
       setActiveSectionId(firstRoot?.id ?? null)
     },
-    [guides],
+    [sections],
   )
 
   const selectSection = useCallback((sectionId: string) => {
@@ -94,30 +103,36 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const updateSectionContent = useCallback(
     (sectionId: string, content: string) => {
+      setSections((prev) =>
+        prev.map((s) =>
+          s.id === sectionId ? { ...s, content, updatedAt: new Date().toISOString() } : s,
+        ),
+      )
       setGuides((prev) =>
-        prev.map((g) => ({
-          ...g,
-          sections: g.sections.map((s) =>
-            s.id === sectionId ? { ...s, content } : s,
-          ),
-          updatedAt: new Date().toISOString(),
-        })),
+        prev.map((g) =>
+          g.id === activeGuideId
+            ? { ...g, updatedAt: new Date().toISOString() }
+            : g,
+        ),
+      )
+      setSaveStatus('unsaved')
+    },
+    [activeGuideId],
+  )
+
+  const updateGuideTitle = useCallback(
+    (guideId: string, title: string) => {
+      setGuides((prev) =>
+        prev.map((g) =>
+          g.id === guideId
+            ? { ...g, title, updatedAt: new Date().toISOString() }
+            : g,
+        ),
       )
       setSaveStatus('unsaved')
     },
     [],
   )
-
-  const updateGuideTitle = useCallback((guideId: string, title: string) => {
-    setGuides((prev) =>
-      prev.map((g) =>
-        g.id === guideId
-          ? { ...g, title, updatedAt: new Date().toISOString() }
-          : g,
-      ),
-    )
-    setSaveStatus('unsaved')
-  }, [])
 
   const toggleNavigator = useCallback(() => {
     setIsNavigatorOpen((prev) => !prev)
@@ -127,17 +142,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setIsContextPanelOpen((prev) => !prev)
   }, [])
 
-  // ---- 自动保存模拟（实际由组件调用） ----
-  const markSaved = useCallback(() => {
-    setSaveStatus('saved')
-  }, [])
-
-  // 暴露 markSaved 通过一个 hack（将其挂在 window 上不优雅，重新设计）
-  // 改用: 在 value 中暴露 saveStatus 和手动触发保存的方式
-
   const value = useMemo<WorkspaceContextValue>(
     () => ({
       guides,
+      sections,
       activeGuide,
       activeSection,
       isNavigatorOpen,
@@ -152,6 +160,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }),
     [
       guides,
+      sections,
       activeGuide,
       activeSection,
       isNavigatorOpen,

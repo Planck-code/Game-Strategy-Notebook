@@ -4,11 +4,11 @@ import { Gamepad2 } from 'lucide-react'
 import { useWorkspace } from './workspace-provider'
 import { Tag } from '@/components/ui/tag'
 import { Progress } from '@/components/ui/progress'
-import { statusLabels, statusColors } from '@/mock/guides'
+import { statusLabels, statusColors, getGameById } from '@/mock'
 import { cn } from '@/lib/utils'
 
 export function GuideProperties() {
-  const { activeGuide } = useWorkspace()
+  const { activeGuide, sections } = useWorkspace()
 
   if (!activeGuide) {
     return (
@@ -18,8 +18,10 @@ export function GuideProperties() {
     )
   }
 
-  const sectionCount = activeGuide.sections.length
-  const completedSections = activeGuide.sections.filter(
+  const game = getGameById(activeGuide.gameId)
+  const guideSections = sections.filter((s) => s.guideId === activeGuide.id)
+  const sectionCount = guideSections.length
+  const completedSections = guideSections.filter(
     (s) => s.content.length > 100,
   ).length
   const progress =
@@ -30,7 +32,7 @@ export function GuideProperties() {
       {/* 游戏 */}
       <div className="flex items-center gap-2">
         <Gamepad2 className="size-3.5 text-primary/60" />
-        <span className="text-sm font-medium">{activeGuide.gameName}</span>
+        <span className="text-sm font-medium">{game?.name ?? activeGuide.gameId}</span>
       </div>
 
       {/* 状态 */}

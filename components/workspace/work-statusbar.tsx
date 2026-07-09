@@ -1,20 +1,24 @@
 'use client'
 
 import { useWorkspace } from './workspace-provider'
-import { getWordCount } from '@/mock/guides'
+import { getWordCount } from '@/mock'
 
 export function WorkStatusbar() {
-  const { activeGuide, activeSection } = useWorkspace()
+  const { activeGuide, activeSection, sections } = useWorkspace()
 
   if (!activeGuide) return null
 
-  const wordCount = getWordCount(activeGuide)
+  const wordCount = getWordCount(activeGuide.id)
+  const rootSections = sections
+    .filter((s) => s.guideId === activeGuide.id && s.parentId === null)
+    .sort((a, b) => a.order - b.order)
+
   const sectionIndex = activeSection
-    ? activeGuide.sections
-        .filter((s) => s.parentId === null)
-        .findIndex((s) => s.id === activeSection?.id || activeSection?.parentId === s.id) + 1
+    ? rootSections.findIndex(
+        (s) => s.id === activeSection.id || activeSection.parentId === s.id,
+      ) + 1
     : 0
-  const totalSections = activeGuide.sections.filter((s) => s.parentId === null).length
+  const totalSections = rootSections.length
 
   return (
     <div className="flex items-center justify-between border-t border-border/50 px-4 py-1.5">

@@ -2,7 +2,7 @@
 
 import { FileEdit } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { type Guide, statusColors } from '@/mock/guides'
+import { type Guide, statusColors, getGameById } from '@/mock'
 
 export type GuideListItemProps = {
   guide: Guide
@@ -11,6 +11,8 @@ export type GuideListItemProps = {
 }
 
 export function GuideListItem({ guide, isActive, onClick }: GuideListItemProps) {
+  const game = getGameById(guide.gameId)
+
   return (
     <button
       onClick={onClick}
@@ -38,7 +40,7 @@ export function GuideListItem({ guide, isActive, onClick }: GuideListItemProps) 
           <span
             className={cn('inline-block size-1.5 rounded-full', statusColors[guide.status])}
           />
-          {guide.gameName}
+          {game?.name ?? guide.gameId}
         </p>
       </div>
     </button>

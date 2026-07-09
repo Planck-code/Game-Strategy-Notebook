@@ -3,14 +3,14 @@
 import { useMemo } from 'react'
 import { ListTree } from 'lucide-react'
 import { useWorkspace } from './workspace-provider'
-import { buildSectionTree } from '@/mock/guides'
+import { buildSectionTree } from '@/mock'
 import { OutlineTreeItem } from './outline-tree-item'
 
 export function GuideOutlineTree() {
   const { activeGuide, activeSection, selectSection } = useWorkspace()
 
   const tree = useMemo(
-    () => (activeGuide ? buildSectionTree(activeGuide) : []),
+    () => (activeGuide ? buildSectionTree(activeGuide.id) : []),
     [activeGuide],
   )
 

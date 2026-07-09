@@ -2,16 +2,18 @@
 
 import { ImageIcon, Paperclip } from 'lucide-react'
 import { useWorkspace } from './workspace-provider'
+import { getAttachmentsByParent } from '@/mock'
 
 export function AttachmentGrid() {
   const { activeGuide } = useWorkspace()
 
   if (!activeGuide) return null
 
-  const images = activeGuide.attachments.filter((a) => a.type === 'image')
-  const files = activeGuide.attachments.filter((a) => a.type === 'file')
+  const guideAttachments = getAttachmentsByParent('guide', activeGuide.id)
+  const images = guideAttachments.filter((a) => a.type === 'image')
+  const files = guideAttachments.filter((a) => a.type === 'file')
 
-  if (activeGuide.attachments.length === 0) {
+  if (guideAttachments.length === 0) {
     return (
       <div className="flex items-center gap-2 px-3 py-4 text-xs text-muted-foreground/50">
         <Paperclip className="size-3.5" />

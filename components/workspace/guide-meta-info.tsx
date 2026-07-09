@@ -1,15 +1,15 @@
 'use client'
 
 import { useWorkspace } from './workspace-provider'
-import { getWordCount } from '@/mock/guides'
+import { getWordCount } from '@/mock'
 
 export function GuideMetaInfo() {
-  const { activeGuide } = useWorkspace()
+  const { activeGuide, sections } = useWorkspace()
 
   if (!activeGuide) return null
 
-  const wordCount = getWordCount(activeGuide)
-  const sectionCount = activeGuide.sections.length
+  const wordCount = getWordCount(activeGuide.id)
+  const sectionCount = sections.filter((s) => s.guideId === activeGuide.id).length
 
   const meta = [
     { label: '创建', value: new Date(activeGuide.createdAt).toLocaleDateString('zh-CN') },
