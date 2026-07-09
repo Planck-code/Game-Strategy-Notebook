@@ -111,10 +111,10 @@ function now(): string {
 // ============================================================
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
-  // ---- 核心数据（从 LocalStorage 恢复，回退到 Mock） ----
-  const [guides, setGuides] = useState<Guide[]>(() => loadGuides(mockGuides))
-  const [sections, setSections] = useState<Section[]>(() => loadSections(mockSections))
-  const [relations, setRelations] = useState<GuideRelation[]>(() => loadRelations(mockRelations))
+  // ---- 核心数据（初始统一用 Mock，避免 SSR/客户端 hydration 不一致） ----
+  const [guides, setGuides] = useState<Guide[]>(mockGuides)
+  const [sections, setSections] = useState<Section[]>(mockSections)
+  const [relations, setRelations] = useState<GuideRelation[]>(mockRelations)
 
   // ---- 选中态 ----
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null)
@@ -132,24 +132,33 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>('updated_desc')
 
   // ---- 收藏（内部存数组以便序列化，对外暴露 Set） ----
-  const [favoriteArr, setFavoriteArr] = useState<string[]>(() => loadFavorites([]))
+  const [favoriteArr, setFavoriteArr] = useState<string[]>([])
   const favoriteGuideIds = useMemo(() => new Set(favoriteArr), [favoriteArr])
 
   // ---- 保存状态 ----
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved')
-  const isInitialMount = useRef(true)
+  const hydrated = useRef(false)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // ============================================================
+  // 客户端挂载后从 LocalStorage 恢复（避免 Hydration Mismatch）
+  // ============================================================
+
+  useEffect(() => {
+    setGuides(loadGuides(mockGuides))
+    setSections(loadSections(mockSections))
+    setRelations(loadRelations(mockRelations))
+    setFavoriteArr(loadFavorites([]))
+    hydrated.current = true
+  }, [])
 
   // ============================================================
   // 自动持久化（guides / sections / relations / favorites 变化时）
   // ============================================================
 
   useEffect(() => {
-    // 首次挂载跳过（数据刚从 storage 加载）
-    if (isInitialMount.current) {
-      isInitialMount.current = false
-      return
-    }
+    // 跳过 hydration 阶段（数据刚从 storage 恢复到 state）
+    if (!hydrated.current) return
     // 标记未保存，启动防抖保存
     setSaveStatus('unsaved')
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
