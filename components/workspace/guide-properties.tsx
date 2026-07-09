@@ -8,7 +8,7 @@ import { statusLabels, statusColors, getGameById } from '@/mock'
 import { cn } from '@/lib/utils'
 
 export function GuideProperties() {
-  const { activeGuide, sections } = useWorkspace()
+  const { activeGuide, sections, tagFilter, setTagFilter } = useWorkspace()
 
   if (!activeGuide) {
     return (
@@ -58,15 +58,34 @@ export function GuideProperties() {
         <Progress value={progress} className="h-1.5" />
       </div>
 
-      {/* 标签 */}
+      {/* 标签（可点击筛选） */}
       {activeGuide.tags.length > 0 ? (
         <div className="space-y-1.5">
-          <span className="text-[13px] text-muted-foreground">标签</span>
+          <span className="text-[13px] text-muted-foreground">
+            标签
+            {tagFilter ? (
+              <button
+                onClick={() => setTagFilter(null)}
+                className="ml-1 text-[11px] text-primary hover:underline"
+              >
+                清除筛选
+              </button>
+            ) : null}
+          </span>
           <div className="flex flex-wrap gap-1">
             {activeGuide.tags.map((tag) => (
-              <Tag key={tag} variant="secondary" className="text-[11px]">
-                #{tag}
-              </Tag>
+              <button
+                key={tag}
+                onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
+                className="inline-flex"
+              >
+                <Tag
+                  variant={tagFilter === tag ? 'default' : 'secondary'}
+                  className="text-[11px] cursor-pointer transition-colors"
+                >
+                  #{tag}
+                </Tag>
+              </button>
             ))}
           </div>
         </div>

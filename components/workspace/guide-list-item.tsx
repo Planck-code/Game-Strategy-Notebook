@@ -1,5 +1,6 @@
 'use client'
 
+import type { MouseEvent } from 'react'
 import { FileEdit } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { type Guide, statusColors, getGameById } from '@/mock'
@@ -8,14 +9,16 @@ export type GuideListItemProps = {
   guide: Guide
   isActive: boolean
   onClick: () => void
+  onContextMenu?: (e: MouseEvent, guideId: string) => void
 }
 
-export function GuideListItem({ guide, isActive, onClick }: GuideListItemProps) {
+export function GuideListItem({ guide, isActive, onClick, onContextMenu }: GuideListItemProps) {
   const game = getGameById(guide.gameId)
 
   return (
     <button
       onClick={onClick}
+      onContextMenu={(e) => onContextMenu?.(e, guide.id)}
       className={cn(
         'group flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-200',
         isActive

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Gamepad2, ChevronsLeft, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navItems } from '@/lib/mock-data'
@@ -25,6 +25,7 @@ export type AppSidebarProps = {
  */
 export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   // DashboardLayout Context — 导航时自动关闭移动端抽屉
   const { closeMobile } = useDashboardMobile()
@@ -73,7 +74,13 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
       </div>
 
       {/* 新建攻略 */}
-      <Button className="w-full justify-start gap-2 rounded-lg bg-primary/90 text-primary-foreground hover:bg-primary">
+      <Button
+        className="w-full justify-start gap-2 rounded-lg bg-primary/90 text-primary-foreground hover:bg-primary"
+        onClick={() => {
+          router.push('/guides')
+          handleNav()
+        }}
+      >
         <Plus className="size-4" />
         新建攻略
       </Button>

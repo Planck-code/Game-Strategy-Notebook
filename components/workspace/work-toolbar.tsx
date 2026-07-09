@@ -1,14 +1,56 @@
 'use client'
 
-import { Plus, Undo2, Redo2, MoreHorizontal } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { Plus, Undo2, Redo2, Star, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useWorkspace } from './workspace-provider'
 
 export function WorkToolbar() {
-  const { activeGuide, saveStatus } = useWorkspace()
+  const {
+    activeGuide,
+    saveStatus,
+    favoriteGuideIds,
+    renameGuide,
+    toggleFavorite,
+  } = useWorkspace()
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const [editTitle, setEditTitle] = useState('')
+  const titleInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus()
+      titleInputRef.current.select()
+    }
+  }, [isEditingTitle])
+
+  // 切换攻略时退出编辑态
+  useEffect(() => {
+    setIsEditingTitle(false)
+  }, [activeGuide?.id])
 
   if (!activeGuide) return null
+
+  const isFav = favoriteGuideIds.has(activeGuide.id)
+
+  const handleStartRename = () => {
+    setEditTitle(activeGuide.title)
+    setIsEditingTitle(true)
+  }
+
+  const handleSaveRename = () => {
+    if (editTitle.trim() && editTitle.trim() !== activeGuide.title) {
+      renameGuide(activeGuide.id, editTitle.trim())
+    }
+    setIsEditingTitle(false)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleSaveRename()
+    if (e.key === 'Escape') setIsEditingTitle(false)
+  }
 
   return (
     <div className="flex items-center gap-2 border-b border-border/50 px-4 py-2">
@@ -26,15 +68,45 @@ export function WorkToolbar() {
         </Button>
       </div>
 
-      {/* 中间：当前编辑位置 */}
-      <div className="flex flex-1 items-center justify-center">
-        <span className="truncate font-mono text-[11px] text-muted-foreground">
-          {activeGuide.title}
-        </span>
+      {/* 中间：可编辑标题 */}
+      <div className="flex flex-1 items-center justify-center min-w-0">
+        {isEditingTitle ? (
+          <input
+            ref={titleInputRef}
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            onBlur={handleSaveRename}
+            onKeyDown={handleKeyDown}
+            className="h-7 w-full max-w-xs rounded-lg border border-border bg-background px-2 text-center text-[13px] font-medium outline-none focus-visible:border-ring"
+          />
+        ) : (
+          <button
+            onClick={handleStartRename}
+            className="truncate max-w-[300px] font-mono text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+            title="点击重命名"
+          >
+            {activeGuide.title}
+          </button>
+        )}
       </div>
 
-      {/* 右侧：保存状态 */}
-      <div className="flex items-center gap-2">
+      {/* 右侧：收藏 + 保存状态 */}
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7"
+          onClick={() => toggleFavorite(activeGuide.id)}
+          aria-label={isFav ? '取消收藏' : '收藏攻略'}
+        >
+          <Star
+            className={cn(
+              'size-4 transition-colors',
+              isFav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground',
+            )}
+          />
+        </Button>
+
         <span
           className={cn(
             'flex items-center gap-1.5 font-mono text-[10px]',

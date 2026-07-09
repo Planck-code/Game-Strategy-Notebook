@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useWorkspace } from './workspace-provider'
 
 export function GuideSearch() {
-  const [value, setValue] = useState('')
+  const { searchQuery, setSearchQuery } = useWorkspace()
 
   return (
     <div className="relative px-3 py-2">
@@ -13,8 +13,8 @@ export function GuideSearch() {
       <Input
         type="search"
         placeholder="搜索攻略…"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="h-8 rounded-lg border-border/50 bg-background/60 pl-8 text-xs placeholder:text-muted-foreground/60"
       />
     </div>
