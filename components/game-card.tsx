@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { BookOpen, Users, Skull, Map, ScrollText, ArrowUpRight, Gamepad2 } from 'lucide-react'
+import { formatRelativeTime } from '@/lib/utils'
 import type { Game } from '@/mock'
 
 // ============================================================
@@ -118,22 +119,4 @@ export function GameCard({ game, stats }: { game: Game; stats: GameCardStats }) 
       </article>
     </Link>
   )
-}
-
-// ============================================================
-// 辅助函数
-// ============================================================
-
-function formatRelativeTime(dateStr: string): string {
-  const now = new Date()
-  const date = new Date(dateStr)
-  const diffMs = now.getTime() - date.getTime()
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-  if (diffDays === 0) return '今天'
-  if (diffDays === 1) return '昨天'
-  if (diffDays < 7) return `${diffDays} 天前`
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} 周前`
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} 个月前`
-  return `${Math.floor(diffDays / 365)} 年前`
 }
