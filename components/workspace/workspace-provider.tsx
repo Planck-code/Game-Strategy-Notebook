@@ -17,6 +17,7 @@ import {
   type Guide,
   type Section,
   type GuideRelation,
+  type ReferenceType,
   type SectionTemplate,
 } from '@/mock'
 import {
@@ -76,6 +77,8 @@ type WorkspaceContextValue = {
   renameGuide: (guideId: string, newTitle: string) => void
   duplicateGuide: (guideId: string) => void
   toggleFavorite: (guideId: string) => void
+  addReference: (guideId: string, targetType: ReferenceType, targetId: string, note?: string) => void
+  removeReference: (relationId: string) => void
 }
 
 // ============================================================
@@ -382,6 +385,32 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
+  const addReference = useCallback(
+    (guideId: string, targetType: ReferenceType, targetId: string, note?: string) => {
+      // 防重复
+      setRelations((prev) => {
+        const exists = prev.some(
+          (r) => r.guideId === guideId && r.targetType === targetType && r.targetId === targetId,
+        )
+        if (exists) return prev
+        const newRel: GuideRelation = {
+          id: nextId('rel'),
+          guideId,
+          targetType,
+          targetId,
+          note,
+          createdAt: now(),
+        }
+        return [...prev, newRel]
+      })
+    },
+    [],
+  )
+
+  const removeReference = useCallback((relationId: string) => {
+    setRelations((prev) => prev.filter((r) => r.id !== relationId))
+  }, [])
+
   // ============================================================
   // Context Value
   // ============================================================
@@ -401,10 +430,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setSearchQuery, setGameFilter, setTagFilter, setSortOrder,
       openCreateDialog, closeCreateDialog,
       createGuide, deleteGuide, renameGuide, duplicateGuide, toggleFavorite,
+      addReference, removeReference,
     }),
     [
       guides, sections, relations,
       activeGuide, activeSection,
+      addReference, removeReference,
       favoriteGuideIds,
       searchQuery, gameFilter, tagFilter, sortOrder,
       filteredGuides,
@@ -416,6 +447,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setSearchQuery, setGameFilter, setTagFilter, setSortOrder,
       openCreateDialog, closeCreateDialog,
       createGuide, deleteGuide, renameGuide, duplicateGuide, toggleFavorite,
+      addReference, removeReference,
     ],
   )
 

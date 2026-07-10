@@ -78,3 +78,39 @@ export const referenceTypeLabels: Record<ReferenceType, string> = {
   quest: '任务',
   item: '道具',
 }
+
+// ============================================================
+// 反向引用
+// ============================================================
+
+import type { Guide } from './guides'
+
+export type BackReference = {
+  guide: Guide
+  relation: GuideRelation
+}
+
+/**
+ * 反向引用：查询哪些 Guide 引用了某个实体。
+ *
+ * @param targetType 被引用实体类型
+ * @param targetId  被引用实体 ID
+ * @param allGuides 攻略列表（运行时传入，避免循环依赖）
+ * @param allRelations 关联列表（运行时传入）
+ */
+export function getBackReferences(
+  targetType: ReferenceType,
+  targetId: string,
+  allGuides: Guide[],
+  allRelations: GuideRelation[],
+): BackReference[] {
+  const rels = allRelations.filter(
+    (r) => r.targetType === targetType && r.targetId === targetId,
+  )
+  return rels
+    .map((relation) => {
+      const guide = allGuides.find((g) => g.id === relation.guideId)
+      return guide ? { guide, relation } : null
+    })
+    .filter((x): x is BackReference => x !== null)
+}

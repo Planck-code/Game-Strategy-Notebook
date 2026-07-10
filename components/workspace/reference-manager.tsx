@@ -1,86 +1,155 @@
 'use client'
 
-import { Link2, User, Swords, Map, ScrollText, Package } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, User, Swords, Map, ScrollText, Package } from 'lucide-react'
+import type { ReferenceType } from '@/mock'
+import { referenceTypeLabels } from '@/mock'
 import { useWorkspace } from './workspace-provider'
-import {
-  getRelationsGrouped,
-  type ReferenceType,
-  getCharacterById,
-  getBossById,
-  getMapById,
-  getQuestById,
-  getItemById,
-} from '@/mock'
+import { useReferenceSystem } from '@/components/reference/use-reference-system'
+import { ReferenceCard } from '@/components/reference/reference-card'
+import { ReferencePicker } from '@/components/reference/reference-picker'
+import { ReferenceDrawer } from '@/components/reference/reference-drawer'
+import { type ReferencedEntity } from '@/components/reference/reference-utils'
 
-const typeConfig: Record<ReferenceType, { icon: React.ComponentType<{ className?: string }>; label: string }> = {
-  character: { icon: User, label: '人物' },
-  boss: { icon: Swords, label: 'Boss' },
-  map: { icon: Map, label: '地图' },
-  quest: { icon: ScrollText, label: '任务' },
-  item: { icon: Package, label: '道具' },
-}
-
-/** 根据 targetType 和 targetId 查找目标实体名称 */
-function resolveTargetName(type: ReferenceType, targetId: string): string {
-  switch (type) {
-    case 'character': return getCharacterById(targetId)?.name ?? targetId
-    case 'boss': return getBossById(targetId)?.name ?? targetId
-    case 'map': return getMapById(targetId)?.name ?? targetId
-    case 'quest': return getQuestById(targetId)?.name ?? targetId
-    case 'item': return getItemById(targetId)?.name ?? targetId
-    default: return targetId
-  }
+const typeIcons: Record<ReferenceType, React.ComponentType<{ className?: string }>> = {
+  character: User,
+  boss: Swords,
+  map: Map,
+  quest: ScrollText,
+  item: Package,
 }
 
 export function ReferenceManager() {
-  const { activeGuide } = useWorkspace()
+  const { activeGuide, addReference, removeReference, relations, selectGuide } = useWorkspace()
+  const { currentReferences, getBackRefs } = useReferenceSystem()
+
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [drawerEntity, setDrawerEntity] = useState<ReferencedEntity | null>(null)
 
   if (!activeGuide) return null
 
-  const grouped = getRelationsGrouped(activeGuide.id)
-  const hasAny = Object.values(grouped).some((list) => list && list.length > 0)
+  // 已关联的 targetId 集合
+  const existingRefIds = new Set(
+    relations
+      .filter((r) => r.guideId === activeGuide.id)
+      .map((r) => r.targetId),
+  )
 
-  if (!hasAny) {
+  const handleToggleRef = (type: ReferenceType, id: string, _name: string) => {
+    const existing = relations.find(
+      (r) => r.guideId === activeGuide.id && r.targetType === type && r.targetId === id,
+    )
+    if (existing) {
+      removeReference(existing.id)
+    } else {
+      addReference(activeGuide.id, type, id)
+    }
+  }
+
+  // 当前 Drawer 中展示的实体的反向引用
+  const drawerBackRefs = drawerEntity ? getBackRefs(drawerEntity.type, drawerEntity.id) : []
+
+  if (currentReferences.length === 0) {
     return (
-      <div className="px-3 py-4">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground/50">
-          <Link2 className="size-3.5" />
-          <span>暂无关联内容</span>
+      <>
+        <div className="px-3 py-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground/50">暂无关联</span>
+            <button
+              onClick={() => setPickerOpen(true)}
+              className="rounded-md p-0.5 text-muted-foreground/50 hover:bg-sidebar-accent hover:text-foreground transition-colors"
+              aria-label="添加关联"
+            >
+              <Plus className="size-3.5" />
+            </button>
+          </div>
         </div>
-      </div>
+
+        <ReferencePicker
+          open={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          existingRefIds={existingRefIds}
+          onToggleRef={handleToggleRef}
+        />
+      </>
     )
   }
 
+  // 按类型分组
+  const grouped: Partial<Record<ReferenceType, typeof currentReferences>> = {}
+  for (const ref of currentReferences) {
+    const t = ref.entity.type
+    const list = grouped[t] ?? []
+    list.push(ref)
+    grouped[t] = list
+  }
+
   return (
-    <div className="space-y-2 px-3 py-3">
-      {(['character', 'boss', 'map', 'quest', 'item'] as ReferenceType[]).map((type) => {
-        const relations = grouped[type]
-        if (!relations || relations.length === 0) return null
+    <>
+      <div className="space-y-2 px-3 py-1.5">
+        {/* 标题栏 + 添加按钮 */}
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
+            关联 ({currentReferences.length})
+          </span>
+          <button
+            onClick={() => setPickerOpen(true)}
+            className="rounded-md p-0.5 text-muted-foreground/50 hover:bg-sidebar-accent hover:text-foreground transition-colors"
+            aria-label="添加关联"
+          >
+            <Plus className="size-3.5" />
+          </button>
+        </div>
 
-        const { icon: TypeIcon, label } = typeConfig[type]
+        {/* 按类型分组渲染 */}
+        {(['character', 'boss', 'map', 'quest', 'item'] as ReferenceType[]).map((type) => {
+          const refs = grouped[type]
+          if (!refs || refs.length === 0) return null
 
-        return (
-          <div key={type} className="space-y-1">
-            <div className="flex items-center gap-1.5">
-              <TypeIcon className="size-3 text-muted-foreground/60" />
-              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
-                {label}
-              </span>
-            </div>
-            {relations.map((rel) => (
-              <div
-                key={rel.id}
-                className="flex items-center gap-2 rounded-md bg-background/50 px-2.5 py-1.5 text-[13px]"
-                title={rel.note}
-              >
-                <span className="flex-1 truncate">
-                  {resolveTargetName(rel.targetType, rel.targetId)}
+          const TypeIcon = typeIcons[type]
+          const label = referenceTypeLabels[type]
+
+          return (
+            <div key={type} className="space-y-1">
+              <div className="flex items-center gap-1.5 px-0.5">
+                <TypeIcon className="size-3 text-muted-foreground/60" />
+                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
+                  {label}
                 </span>
               </div>
-            ))}
-          </div>
-        )
-      })}
-    </div>
+              {refs.map((ref) => (
+                <ReferenceCard
+                  key={ref.relation.id}
+                  entity={ref.entity}
+                  size="sm"
+                  onClick={() => setDrawerEntity(ref.entity)}
+                  onRemove={() => removeReference(ref.relation.id)}
+                />
+              ))}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 引用选择器 */}
+      <ReferencePicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        existingRefIds={existingRefIds}
+        onToggleRef={handleToggleRef}
+      />
+
+      {/* 引用详情抽屉 */}
+      <ReferenceDrawer
+        open={!!drawerEntity}
+        onClose={() => setDrawerEntity(null)}
+        entity={drawerEntity}
+        backRefs={drawerBackRefs}
+        onNavigateToGuide={(guideId) => {
+          selectGuide(guideId)
+          setDrawerEntity(null)
+        }}
+      />
+    </>
   )
 }

@@ -93,4 +93,6 @@ export {
   getRelatedIds,
   getRelationsGrouped,
   referenceTypeLabels,
+  getBackReferences,
 } from './relations'
+export type { BackReference } from './relations'
