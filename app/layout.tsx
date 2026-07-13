@@ -1,19 +1,13 @@
+import { Suspense } from 'react'
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
-})
-
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-})
+// 使用系统字体栈避免构建时网络依赖
+const fontSans = `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`
+const fontMono = `ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace`
 
 export const metadata: Metadata = {
   title: 'Game Strategy Notebook',
@@ -32,11 +26,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="zh" className="dark">
       <body className="bg-background font-sans antialiased">
         <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
         <Toaster />
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        {process.env.NODE_ENV === 'production' && (
+          <Suspense fallback={null}>
+            <Analytics />
+          </Suspense>
+        )}
       </body>
     </html>
   )

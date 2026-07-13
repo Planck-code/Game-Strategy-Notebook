@@ -1,6 +1,11 @@
 import { Map } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { maps } from '@/mock'
+
+export function generateStaticParams() {
+  return maps.map((m) => ({ id: m.id }))
+}
 
 export default function MapDetailPage() {
   return (

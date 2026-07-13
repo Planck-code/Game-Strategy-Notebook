@@ -1,6 +1,11 @@
 import { Package } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { items } from '@/mock'
+
+export function generateStaticParams() {
+  return items.map((i) => ({ id: i.id }))
+}
 
 export default function ItemDetailPage() {
   return (

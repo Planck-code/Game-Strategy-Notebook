@@ -1,6 +1,11 @@
 import { Clock } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { timelineEvents } from '@/mock'
+
+export function generateStaticParams() {
+  return timelineEvents.map((e) => ({ id: e.id }))
+}
 
 export default function TimelineDetailPage() {
   return (

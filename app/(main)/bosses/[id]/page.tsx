@@ -1,6 +1,11 @@
 import { Skull } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { bosses } from '@/mock'
+
+export function generateStaticParams() {
+  return bosses.map((b) => ({ id: b.id }))
+}
 
 export default function BossDetailPage() {
   return (

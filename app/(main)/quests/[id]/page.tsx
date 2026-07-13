@@ -1,6 +1,11 @@
 import { ScrollText } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { quests } from '@/mock'
+
+export function generateStaticParams() {
+  return quests.map((q) => ({ id: q.id }))
+}
 
 export default function QuestDetailPage() {
   return (

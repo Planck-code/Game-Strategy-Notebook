@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import { Gamepad2 } from 'lucide-react'
 import { formatRelativeTime } from '@/lib/utils'

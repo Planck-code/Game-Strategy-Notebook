@@ -1,6 +1,11 @@
 import { Users } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { EmptyState } from '@/components/empty-state'
+import { characters } from '@/mock'
+
+export function generateStaticParams() {
+  return characters.map((c) => ({ id: c.id }))
+}
 
 export default function CharacterDetailPage() {
   return (
