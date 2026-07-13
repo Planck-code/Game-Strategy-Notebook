@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { FileText, Sparkles, Eye, Users } from 'lucide-react'
 import { workspaceStats } from '@/lib/mock-data'
 
@@ -33,14 +34,15 @@ export function WelcomeHero() {
           {stats.map((s) => {
             const Icon = s.icon
             return (
-              <div
+              <Link
                 key={s.label}
-                className="rounded-xl border border-border/60 bg-background/40 p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
+                href={s.label === '攻略总数' || s.label === '本周发布' ? '/guides' : '/games'}
+                className="block rounded-xl border border-border/60 bg-background/40 p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
               >
                 <Icon className="mb-2 size-4 text-primary" />
                 <p className="font-mono text-lg font-semibold leading-none">{s.value}</p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{s.label}</p>
-              </div>
+              </Link>
             )
           })}
         </div>

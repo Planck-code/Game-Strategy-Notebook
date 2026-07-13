@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { Clock, FileText, ArrowUpRight } from 'lucide-react'
 import { recentStrategies } from '@/lib/mock-data'
 import { Progress } from '@/components/ui/progress'
@@ -11,9 +12,9 @@ export function RecentStrategies() {
           <Clock className="size-4 text-primary" />
           最近编辑
         </h2>
-        <button className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary">
+        <Link href="/guides" className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary">
           查看全部
-        </button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

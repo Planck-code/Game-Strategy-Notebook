@@ -27,7 +27,7 @@ export type EmptyStateProps = {
 export function EmptyState({
   icon: Icon = Package,
   title,
-  description = '此功能正在开发中，敬请期待。',
+  description = '暂无内容',
   className,
 }: EmptyStateProps) {
   return (

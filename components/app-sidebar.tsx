@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Gamepad2, ChevronsLeft, Plus } from 'lucide-react'
+import { Gamepad2, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navItems } from '@/lib/mock-data'
 import { Button } from '@/components/ui/button'
@@ -63,14 +63,6 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
             </p>
           </div>
         </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7 shrink-0 text-muted-foreground hover:text-foreground lg:flex hidden"
-          aria-label="收起侧边栏"
-        >
-          <ChevronsLeft className="size-4" />
-        </Button>
       </div>
 
       {/* 新建攻略 */}

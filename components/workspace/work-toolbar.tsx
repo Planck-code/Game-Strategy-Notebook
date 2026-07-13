@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Plus, Undo2, Redo2, Star, MoreHorizontal } from 'lucide-react'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useWorkspace } from './workspace-provider'
@@ -56,7 +57,13 @@ export function WorkToolbar() {
     <div className="flex items-center gap-2 border-b border-border/50 px-4 py-2">
       {/* 左侧操作 */}
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon" className="size-7" aria-label="添加章节">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7"
+          aria-label="添加章节"
+          onClick={() => toast.info('章节编辑功能即将上线')}
+        >
           <Plus className="size-4" />
         </Button>
         <span className="mx-1 h-4 w-px bg-border/50" aria-hidden="true" />
@@ -128,7 +135,13 @@ export function WorkToolbar() {
           {saveStatus === 'saving' && '保存中…'}
         </span>
 
-        <Button variant="ghost" size="icon" className="size-7" aria-label="更多操作">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7"
+          aria-label="更多操作"
+          onClick={() => toast.info('更多操作功能即将上线')}
+        >
           <MoreHorizontal className="size-4" />
         </Button>
       </div>

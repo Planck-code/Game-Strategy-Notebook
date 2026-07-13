@@ -1,6 +1,7 @@
 'use client'
 
 import { Search, Command, Bell, Menu } from 'lucide-react'
+import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useDashboardMobile } from '@/components/dashboard-layout'
@@ -77,6 +78,7 @@ export function TopBar({ onMenu, title, children }: TopBarProps) {
         size="icon"
         className="relative shrink-0 text-muted-foreground hover:text-foreground"
         aria-label="通知"
+        onClick={() => toast.info('通知功能即将上线')}
       >
         <Bell className="size-5" />
         <span className="absolute right-2 top-2 size-2 rounded-full bg-primary shadow-[0_0_6px] shadow-primary/60" />

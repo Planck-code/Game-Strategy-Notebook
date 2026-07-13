@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { favoriteStrategies } from '@/lib/mock-data'
 
@@ -10,9 +11,9 @@ export function FavoriteStrategies() {
           <Star className="size-4 text-primary" />
           收藏攻略
         </h2>
-        <button className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary">
+        <Link href="/guides" className="font-mono text-xs text-muted-foreground transition-colors hover:text-primary">
           管理收藏
-        </button>
+        </Link>
       </div>
 
       <div className="flex flex-col gap-2">
