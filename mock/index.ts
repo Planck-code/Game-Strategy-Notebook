@@ -43,22 +43,17 @@ export { templates } from './templates'
 export { collections, collectionItems } from './collections'
 
 // ---- Game 辅助函数 ----
-export { getGameById, getGameCover } from './games'
+export { getGameById } from './games'
 
 // ---- Guide 辅助函数 ----
 export {
-  getGuideById,
   getGuidesByGameId,
-  getGuidesByGame,
   statusLabels,
   statusColors,
 } from './guides'
 
 // ---- Section 辅助函数 ----
 export {
-  getSectionsByGuideId,
-  getRootSections,
-  getChildSections,
   buildSectionTree,
   getWordCount,
 } from './sections'
@@ -73,7 +68,7 @@ export { getBossById, getBossesByGameId } from './bosses'
 export { getMapById, getMapsByGameId } from './maps'
 
 // ---- Location 辅助函数 ----
-export { getLocationById, getLocationsByMapId } from './locations'
+export { getLocationById } from './locations'
 
 // ---- Quest 辅助函数 ----
 export { getQuestById, getQuestsByGameId } from './quests'
@@ -90,7 +85,5 @@ export { getAttachmentsByParent } from './attachments'
 // ---- GuideRelation 辅助函数 ----
 export {
   getRelationsByGuideId,
-  getRelatedIds,
   getRelationsGrouped,
-  referenceTypeLabels,
 } from './relations'

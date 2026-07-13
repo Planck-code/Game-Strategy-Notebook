@@ -34,7 +34,7 @@ export default function GamesPage() {
   }
 
   // 为每个游戏计算统计数据
-  const gamesWithStats = useMemo(() => {
+  const gameCards = useMemo(() => {
     return games.map((game) => ({
       game,
       stats: {
@@ -49,7 +49,7 @@ export default function GamesPage() {
 
   // 搜索 + 排序
   const filtered = useMemo(() => {
-    let result = gamesWithStats
+    let result = gameCards
 
     if (search.trim()) {
       const q = search.toLowerCase()
@@ -67,7 +67,7 @@ export default function GamesPage() {
     })
 
     return result
-  }, [gamesWithStats, search, sortOrder])
+  }, [gameCards, search, sortOrder])
 
   return (
     <>
@@ -86,6 +86,7 @@ export default function GamesPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        {/* 排序 */}
         <Button
           variant="outline"
           size="sm"

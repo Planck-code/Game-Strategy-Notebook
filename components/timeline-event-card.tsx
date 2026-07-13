@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { timelineTypeLabels } from '@/lib/labels'
 import type { TimelineEvent } from '@/mock'
 
 // ============================================================
@@ -71,19 +72,8 @@ export function TimelineEventCard({ data }: { data: TimelineEventCardData }) {
   )
 }
 
-// ============================================================
-// 辅助
-// ============================================================
-
 function formatDate(dateStr: string): string {
   return dateStr.slice(5) // "2026-07-09" → "07-09"
-}
-
-const timelineTypeLabels: Record<string, string> = {
-  plot: '剧情',
-  version: '版本更新',
-  guide_milestone: '攻略里程碑',
-  personal: '个人记录',
 }
 
 function timelineTypeLabel(t: string): string {

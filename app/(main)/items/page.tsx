@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { ItemCard, type ItemCardData } from '@/components/item-card'
+import { itemTypeLabels, itemRarityLabels, toSelectOptionsWithAll } from '@/lib/labels'
 import { items, games, guideRelations, getGameById } from '@/mock'
 
 // ============================================================
@@ -18,26 +19,8 @@ import { items, games, guideRelations, getGameById } from '@/mock'
 
 type SortOrder = 'name-asc' | 'name-desc'
 
-const typeOptions = [
-  { value: 'all', label: '全部类型' },
-  { value: 'weapon', label: '武器' },
-  { value: 'armor', label: '防具' },
-  { value: 'consumable', label: '消耗品' },
-  { value: 'material', label: '材料' },
-  { value: 'key_item', label: '关键道具' },
-  { value: 'collectible', label: '收集品' },
-  { value: 'currency', label: '货币' },
-  { value: 'other', label: '其他' },
-]
-
-const rarityOptions = [
-  { value: 'all', label: '全部稀有度' },
-  { value: 'common', label: '普通' },
-  { value: 'uncommon', label: '精良' },
-  { value: 'rare', label: '稀有' },
-  { value: 'epic', label: '史诗' },
-  { value: 'legendary', label: '传说' },
-]
+const typeOptions = toSelectOptionsWithAll(itemTypeLabels, '全部类型')
+const rarityOptions = toSelectOptionsWithAll(itemRarityLabels, '全部稀有度')
 
 export default function ItemsPage() {
   const [search, setSearch] = useState('')

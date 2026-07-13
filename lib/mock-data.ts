@@ -153,8 +153,8 @@ export const todayTasks: TodoItem[] = [
 ]
 
 export const workspaceStats = {
-  totalStrategies: 48,
-  publishedThisWeek: 6,
+  totalStrategies: '48',
+  publishedThisWeek: '6',
   totalViews: '128.4k',
   followers: '9,320',
 }

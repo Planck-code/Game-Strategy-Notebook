@@ -1,6 +1,7 @@
 import { BookOpen, Skull, Swords } from 'lucide-react'
 import { EntityCard } from '@/components/entity-card'
 import { Badge } from '@/components/ui/badge'
+import { difficultyLabels, difficultyVariant } from '@/lib/labels'
 import type { Boss } from '@/mock'
 
 // ============================================================
@@ -88,26 +89,6 @@ export function BossCard({ data }: { data: BossCardData }) {
   )
 }
 
-// ============================================================
-// 辅助
-// ============================================================
-
-const difficultyLabelMap: Record<string, string> = {
-  easy: '简单',
-  normal: '普通',
-  hard: '困难',
-  extreme: '极难',
-}
-
 function difficultyLabel(d: string): string {
-  return difficultyLabelMap[d] ?? d
-}
-
-function difficultyVariant(
-  d: string,
-): 'secondary' | 'default' | 'destructive' | 'outline' {
-  if (d === 'extreme') return 'destructive'
-  if (d === 'hard') return 'default'
-  if (d === 'easy') return 'outline'
-  return 'secondary'
+  return difficultyLabels[d] ?? d
 }

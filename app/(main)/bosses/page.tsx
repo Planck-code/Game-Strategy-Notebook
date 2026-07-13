@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { BossCard, type BossCardData } from '@/components/boss-card'
+import { difficultyLabels, toSelectOptionsWithAll } from '@/lib/labels'
 import {
   bosses,
   games,
@@ -15,7 +16,6 @@ import {
   maps,
   getGameById,
   getMapById,
-  getLocationById,
 } from '@/mock'
 
 // ============================================================
@@ -27,13 +27,7 @@ import {
 
 type SortOrder = 'name-asc' | 'name-desc'
 
-const difficultyOptions = [
-  { value: 'all', label: '全部难度' },
-  { value: 'easy', label: '简单' },
-  { value: 'normal', label: '普通' },
-  { value: 'hard', label: '困难' },
-  { value: 'extreme', label: '极难' },
-]
+const difficultyOptions = toSelectOptionsWithAll(difficultyLabels, '全部难度')
 
 export default function BossesPage() {
   const [search, setSearch] = useState('')

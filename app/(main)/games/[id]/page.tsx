@@ -28,7 +28,6 @@ import {
   getItemsByGameId,
   getTimelineEventsByGameId,
   statusLabels,
-  statusColors,
   type Guide,
   type Character,
   type Boss,
@@ -37,6 +36,14 @@ import {
   type Item,
   type TimelineEvent,
 } from '@/mock'
+import {
+  difficultyLabels,
+  questTypeLabels,
+  questStatusLabels,
+  itemTypeLabels,
+  itemRarityLabels,
+  timelineTypeLabels,
+} from '@/lib/labels'
 
 // ============================================================
 // 游戏详情页
@@ -374,80 +381,26 @@ function TimelineList({ events }: { events: TimelineEvent[] }) {
   )
 }
 
-// ============================================================
-// 标签映射
-// ============================================================
-
-const difficultyMap: Record<string, string> = {
-  easy: '简单',
-  normal: '普通',
-  hard: '困难',
-  extreme: '极难',
-}
-
 function difficultyLabel(d: string): string {
-  return difficultyMap[d] ?? d
-}
-
-const questTypeMap: Record<string, string> = {
-  main: '主线',
-  side: '支线',
-  faction: '阵营',
-  daily: '日常',
-  event: '活动',
-  hidden: '隐藏',
+  return difficultyLabels[d] ?? d
 }
 
 function questTypeLabel(t: string): string {
-  return questTypeMap[t] ?? t
-}
-
-const questStatusMap: Record<string, string> = {
-  not_started: '未开始',
-  in_progress: '进行中',
-  completed: '已完成',
-  failed: '失败',
-  blocked: '受阻',
+  return questTypeLabels[t] ?? t
 }
 
 function questStatusLabel(s: string): string {
-  return questStatusMap[s] ?? s
-}
-
-const itemTypeMap: Record<string, string> = {
-  weapon: '武器',
-  armor: '防具',
-  consumable: '消耗品',
-  material: '材料',
-  key_item: '关键道具',
-  collectible: '收集品',
-  currency: '货币',
-  other: '其他',
+  return questStatusLabels[s] ?? s
 }
 
 function itemTypeLabel(t: string): string {
-  return itemTypeMap[t] ?? t
-}
-
-const itemRarityMap: Record<string, string> = {
-  common: '普通',
-  uncommon: '精良',
-  rare: '稀有',
-  epic: '史诗',
-  legendary: '传说',
+  return itemTypeLabels[t] ?? t
 }
 
 function itemRarityLabel(r: string): string {
-  return itemRarityMap[r] ?? r
-}
-
-const timelineTypeMap: Record<string, string> = {
-  plot: '剧情',
-  version: '版本更新',
-  guide_milestone: '攻略里程碑',
-  personal: '个人记录',
+  return itemRarityLabels[r] ?? r
 }
 
 function timelineTypeLabel(t: string): string {
-  return timelineTypeMap[t] ?? t
+  return timelineTypeLabels[t] ?? t
 }

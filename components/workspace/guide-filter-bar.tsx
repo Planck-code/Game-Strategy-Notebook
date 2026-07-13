@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpDown, Check } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import { useWorkspace } from './workspace-provider'
 import { games } from '@/mock'
 import { cn } from '@/lib/utils'

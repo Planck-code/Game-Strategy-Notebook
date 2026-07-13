@@ -1,6 +1,7 @@
 import { ScrollText, Gift, BookOpen } from 'lucide-react'
 import { EntityCard } from '@/components/entity-card'
 import { Badge } from '@/components/ui/badge'
+import { questTypeLabels, questStatusLabels, questStatusVariant } from '@/lib/labels'
 import type { Quest } from '@/mock'
 
 // ============================================================
@@ -74,40 +75,10 @@ export function QuestCard({ data }: { data: QuestCardData }) {
   )
 }
 
-// ============================================================
-// 标签映射
-// ============================================================
-
-const questTypeLabels: Record<string, string> = {
-  main: '主线',
-  side: '支线',
-  faction: '阵营',
-  daily: '日常',
-  event: '活动',
-  hidden: '隐藏',
-}
-
 function questTypeLabel(t: string): string {
   return questTypeLabels[t] ?? t
 }
 
-const questStatusLabels: Record<string, string> = {
-  not_started: '未开始',
-  in_progress: '进行中',
-  completed: '已完成',
-  failed: '失败',
-  blocked: '受阻',
-}
-
 function questStatusLabel(s: string): string {
   return questStatusLabels[s] ?? s
-}
-
-function questStatusVariant(
-  s: string,
-): 'secondary' | 'default' | 'destructive' | 'outline' {
-  if (s === 'completed') return 'default'
-  if (s === 'failed') return 'destructive'
-  if (s === 'blocked') return 'outline'
-  return 'secondary'
 }

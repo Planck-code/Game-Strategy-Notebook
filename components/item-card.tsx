@@ -1,6 +1,7 @@
 import { Package, Compass, BookOpen } from 'lucide-react'
 import { EntityCard } from '@/components/entity-card'
 import { Badge } from '@/components/ui/badge'
+import { itemTypeLabels, itemRarityLabels, rarityVariant } from '@/lib/labels'
 import type { Item } from '@/mock'
 
 // ============================================================
@@ -73,42 +74,10 @@ export function ItemCard({ data }: { data: ItemCardData }) {
   )
 }
 
-// ============================================================
-// 标签映射
-// ============================================================
-
-const itemTypeLabels: Record<string, string> = {
-  weapon: '武器',
-  armor: '防具',
-  consumable: '消耗品',
-  material: '材料',
-  key_item: '关键道具',
-  collectible: '收集品',
-  currency: '货币',
-  other: '其他',
-}
-
 function itemTypeLabel(t: string): string {
   return itemTypeLabels[t] ?? t
 }
 
-const itemRarityLabels: Record<string, string> = {
-  common: '普通',
-  uncommon: '精良',
-  rare: '稀有',
-  epic: '史诗',
-  legendary: '传说',
-}
-
 function itemRarityLabel(r: string): string {
   return itemRarityLabels[r] ?? r
-}
-
-function rarityVariant(
-  r: string,
-): 'secondary' | 'default' | 'destructive' | 'outline' {
-  if (r === 'legendary') return 'destructive'
-  if (r === 'epic' || r === 'rare') return 'default'
-  if (r === 'common') return 'outline'
-  return 'secondary'
 }

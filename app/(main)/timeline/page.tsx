@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { TimelineEventCard, type TimelineEventCardData } from '@/components/timeline-event-card'
+import { timelineTypeLabels, toSelectOptionsWithAll } from '@/lib/labels'
 import { timelineEvents, games, getGameById } from '@/mock'
 
 // ============================================================
@@ -18,13 +19,7 @@ import { timelineEvents, games, getGameById } from '@/mock'
 
 type SortOrder = 'date-asc' | 'date-desc'
 
-const typeOptions = [
-  { value: 'all', label: '全部类型' },
-  { value: 'plot', label: '剧情' },
-  { value: 'version', label: '版本更新' },
-  { value: 'guide_milestone', label: '攻略里程碑' },
-  { value: 'personal', label: '个人记录' },
-]
+const typeOptions = toSelectOptionsWithAll(timelineTypeLabels, '全部类型')
 
 export default function TimelinePage() {
   const [search, setSearch] = useState('')

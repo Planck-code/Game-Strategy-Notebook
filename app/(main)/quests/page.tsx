@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { QuestCard, type QuestCardData } from '@/components/quest-card'
+import { questTypeLabels, questStatusLabels, toSelectOptionsWithAll } from '@/lib/labels'
 import { quests, games, guideRelations, getGameById } from '@/mock'
 
 // ============================================================
@@ -18,24 +19,8 @@ import { quests, games, guideRelations, getGameById } from '@/mock'
 
 type SortOrder = 'name-asc' | 'name-desc'
 
-const typeOptions = [
-  { value: 'all', label: '全部类型' },
-  { value: 'main', label: '主线' },
-  { value: 'side', label: '支线' },
-  { value: 'faction', label: '阵营' },
-  { value: 'daily', label: '日常' },
-  { value: 'event', label: '活动' },
-  { value: 'hidden', label: '隐藏' },
-]
-
-const statusOptions = [
-  { value: 'all', label: '全部状态' },
-  { value: 'not_started', label: '未开始' },
-  { value: 'in_progress', label: '进行中' },
-  { value: 'completed', label: '已完成' },
-  { value: 'failed', label: '失败' },
-  { value: 'blocked', label: '受阻' },
-]
+const typeOptions = toSelectOptionsWithAll(questTypeLabels, '全部类型')
+const statusOptions = toSelectOptionsWithAll(questStatusLabels, '全部状态')
 
 export default function QuestsPage() {
   const [search, setSearch] = useState('')
