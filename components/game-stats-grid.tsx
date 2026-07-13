@@ -22,7 +22,7 @@ export function GameStatsGrid({ items }: { items: StatItem[] }) {
         return (
           <div
             key={item.label}
-            className="rounded-xl border border-border/60 bg-background/40 p-4 transition-colors hover:border-primary/30"
+            className="rounded-xl border border-border/60 bg-background/40 p-4 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
           >
             <Icon className="mb-2 size-4 text-primary" />
             <p className="font-mono text-xl font-semibold leading-none">{item.value}</p>

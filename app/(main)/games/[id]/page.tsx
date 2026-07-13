@@ -250,7 +250,7 @@ function GuideList({ guides }: { guides: Guide[] }) {
       {guides.map((g) => (
         <div
           key={g.id}
-          className="rounded-xl border border-border/60 bg-card/40 p-4 transition-colors hover:border-primary/30"
+          className="rounded-xl border border-border/60 bg-card/40 p-4 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
@@ -309,7 +309,7 @@ function SimpleEntityList<T extends EntityWithDescription>({
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex items-start gap-3 rounded-xl border border-border/60 bg-card/40 p-3.5 transition-colors hover:border-primary/30"
+          className="flex items-start gap-3 rounded-xl border border-border/60 bg-card/40 p-3.5 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
         >
           <div className="min-w-0 flex-1">
             <h4 className="truncate text-sm font-medium">{item.name}</h4>
@@ -345,7 +345,7 @@ function TimelineList({ events }: { events: TimelineEvent[] }) {
         .map((event) => (
           <div
             key={event.id}
-            className="flex items-start gap-3 rounded-xl border border-border/60 bg-card/40 p-3.5 transition-colors hover:border-primary/30"
+            className="flex items-start gap-3 rounded-xl border border-border/60 bg-card/40 p-3.5 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
           >
             {/* 时间线色点 */}
             <div

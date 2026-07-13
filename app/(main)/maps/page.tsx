@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ArrowUpDown, Filter } from 'lucide-react'
+import { ArrowUpDown, Filter, Map } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
+import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { MapCard, type MapCardData } from '@/components/map-card'
@@ -154,9 +155,7 @@ export default function MapsPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-card/30 px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">没有找到匹配的地图</p>
-        </div>
+        <EmptyState icon={Map} title="没有找到匹配的地图" description="尝试调整筛选条件或搜索关键词。" />
       )}
     </>
   )

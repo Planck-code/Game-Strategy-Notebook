@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ArrowUpDown, Filter } from 'lucide-react'
+import { ArrowUpDown, Filter, Clock } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
+import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { TimelineEventCard, type TimelineEventCardData } from '@/components/timeline-event-card'
@@ -134,7 +135,7 @@ export default function TimelinePage() {
           variant="outline"
           size="sm"
           onClick={() =>
-            setSortOrder((prev) => (prev === 'date-desc' ? 'date-asc' : 'date-asc'))
+            setSortOrder((prev) => (prev === 'date-desc' ? 'date-asc' : 'date-desc'))
           }
           className="shrink-0 gap-1.5"
         >
@@ -144,7 +145,7 @@ export default function TimelinePage() {
       </div>
 
       {/* 结果计数 */}
-      <p className="pb-4 font-mono text-[11px] text-muted-foreground">
+      <p className="pb-3 font-mono text-[11px] text-muted-foreground">
         共 {filtered.length} 个事件
       </p>
 
@@ -156,9 +157,7 @@ export default function TimelinePage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-card/30 px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">没有找到匹配的事件</p>
-        </div>
+        <EmptyState icon={Clock} title="没有找到匹配的事件" description="尝试调整筛选条件或搜索关键词。" />
       )}
     </>
   )

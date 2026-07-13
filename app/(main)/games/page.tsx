@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, Gamepad2 } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
+import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { GameCard, type GameCardStats } from '@/components/game-card'
@@ -77,11 +78,11 @@ export default function GamesPage() {
       />
 
       {/* 工具栏 */}
-      <div className="flex items-center gap-3 pb-4 pt-2">
+      <div className="flex flex-wrap items-center gap-3 pb-4 pt-2">
         <SearchInput
           placeholder="搜索游戏…"
           shortcut=""
-          className="max-w-sm flex-1"
+          className="max-w-xs flex-1"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -96,6 +97,11 @@ export default function GamesPage() {
         </Button>
       </div>
 
+      {/* 结果计数 */}
+      <p className="pb-3 font-mono text-[11px] text-muted-foreground">
+        共 {filtered.length} 款游戏
+      </p>
+
       {/* 游戏网格 */}
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -104,9 +110,7 @@ export default function GamesPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-card/30 px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">没有找到匹配的游戏</p>
-        </div>
+        <EmptyState icon={Gamepad2} title="没有找到匹配的游戏" description="尝试调整筛选条件或搜索关键词。" />
       )}
     </>
   )

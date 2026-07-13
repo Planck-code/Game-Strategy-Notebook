@@ -43,7 +43,7 @@ export function TimelineEventCard({ data }: { data: TimelineEventCardData }) {
 
       {/* 右侧：事件卡片 */}
       <Link href={`/timeline/${event.id}`} className="min-w-0 flex-1 pb-6">
-        <div className="group relative rounded-xl border border-border/60 bg-card/40 p-4 transition-colors hover:border-primary/30">
+        <div className="group relative rounded-xl border border-border/60 bg-card/50 p-4 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5">
           <ArrowUpRight className="absolute right-3 top-3 size-3.5 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100" />
 
           {/* 标题 */}

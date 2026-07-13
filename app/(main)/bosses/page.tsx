@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ArrowUpDown, Filter } from 'lucide-react'
+import { ArrowUpDown, Filter, Skull } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
+import { EmptyState } from '@/components/empty-state'
 import { SearchInput } from '@/components/ui/search-input'
 import { Button } from '@/components/ui/button'
 import { BossCard, type BossCardData } from '@/components/boss-card'
@@ -185,9 +186,7 @@ export default function BossesPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-card/30 px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">没有找到匹配的 Boss</p>
-        </div>
+        <EmptyState icon={Skull} title="没有找到匹配的 Boss" description="尝试调整筛选条件或搜索关键词。" />
       )}
     </>
   )

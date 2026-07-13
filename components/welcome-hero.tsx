@@ -35,7 +35,7 @@ export function WelcomeHero() {
             return (
               <div
                 key={s.label}
-                className="rounded-xl border border-border/60 bg-background/40 p-3 transition-colors hover:border-primary/30"
+                className="rounded-xl border border-border/60 bg-background/40 p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
               >
                 <Icon className="mb-2 size-4 text-primary" />
                 <p className="font-mono text-lg font-semibold leading-none">{s.value}</p>
